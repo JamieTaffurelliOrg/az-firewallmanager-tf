@@ -47,7 +47,7 @@ variable "base_policy_rule_collection_groups" {
           protocols = map(object(
             {
               type = string
-              port = optional(bool, false)
+              port = number
             }
           ))
         }
