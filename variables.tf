@@ -60,6 +60,7 @@ variable "base_policy_rule_collection_groups" {
           source_addresses                = optional(list(string))
           source_ip_group_references      = optional(list(string))
           destination_addresses           = optional(list(string))
+          destination_fqdns               = optional(list(string))
           destination_ip_group_references = optional(list(string))
           protocols                       = optional(list(string))
           destination_ports               = optional(list(string))

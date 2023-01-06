@@ -76,7 +76,8 @@ resource "azurerm_firewall_policy_rule_collection_group" "base_policy_rule_colle
           name                  = rule.key
           source_addresses      = rule.value["source_addresses"]
           source_ip_groups      = lookup(rule.value, "source_ip_group_references", null) == null ? null : azurerm_ip_group.ip_group[(rule.value["source_ip_group_references"])].id
-          destination_addresses = rule.value["destination_addresses"]
+          destination_addresses = lookup(rule.value, "destination_addresses", null) == null ? null : rule.value["destination_addresses"]
+          destination_fqdns     = lookup(rule.value, "destination_fqdns", null) == null ? null : rule.value["destination_fqdns"]
           destination_ip_groups = lookup(rule.value, "destination_ip_group_references", null) == null ? null : azurerm_ip_group.ip_group[(rule.value["destination_ip_group_references"])].id
           protocols             = rule.value["protocols"]
           destination_ports     = rule.value["destination_ports"]
