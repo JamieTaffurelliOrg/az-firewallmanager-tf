@@ -26,6 +26,7 @@ variable "base_policy_name" {
 
 variable "intrusion_detection_mode" {
   type        = string
+  default     = "Deny"
   description = "Intrustion detection mode, Off, Alert or Deny"
 }
 
