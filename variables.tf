@@ -37,13 +37,13 @@ variable "base_policy_rule_collection_groups" {
       priority = number
       application_rule_collections = list(object(
         {
-          name                  = string
-          description           = string
-          action                = string
-          source_addresses      = optional(list(string))
-          source_ip_groups      = optional(list(string))
-          destination_fqdns     = optional(list(string))
-          destination_fqdn_tags = optional(list(string))
+          name                       = string
+          description                = string
+          action                     = string
+          source_addresses           = optional(list(string))
+          source_ip_group_references = optional(list(string))
+          destination_fqdns          = optional(list(string))
+          destination_fqdn_tags      = optional(list(string))
           protocols = map(object(
             {
               type = string
@@ -54,15 +54,15 @@ variable "base_policy_rule_collection_groups" {
       ))
       network_rule_collections = list(object(
         {
-          name                  = string
-          description           = string
-          action                = string
-          source_addresses      = optional(list(string))
-          source_ip_groups      = optional(list(string))
-          destination_addresses = optional(list(string))
-          destination_ip_groups = optional(list(string))
-          protocols             = optional(list(string))
-          destination_ports     = optional(list(string))
+          name                            = string
+          description                     = string
+          action                          = string
+          source_addresses                = optional(list(string))
+          source_ip_group_references      = optional(list(string))
+          destination_addresses           = optional(list(string))
+          destination_ip_group_references = optional(list(string))
+          protocols                       = optional(list(string))
+          destination_ports               = optional(list(string))
         }
       ))
     }
