@@ -37,33 +37,45 @@ variable "base_policy_rule_collection_groups" {
       priority = number
       application_rule_collections = list(object(
         {
-          name                       = string
-          description                = string
-          action                     = string
-          source_addresses           = optional(list(string))
-          source_ip_group_references = optional(list(string))
-          destination_fqdns          = optional(list(string))
-          destination_fqdn_tags      = optional(list(string))
-          protocols = map(object(
+          name     = string
+          priority = number
+          action   = string
+          rules = list(object(
             {
-              type = string
-              port = number
+              name                       = string
+              description                = string
+              source_addresses           = optional(list(string))
+              source_ip_group_references = optional(list(string))
+              destination_fqdns          = optional(list(string))
+              destination_fqdn_tags      = optional(list(string))
+              protocols = map(object(
+                {
+                  type = string
+                  port = number
+                }
+              ))
             }
           ))
         }
       ))
       network_rule_collections = list(object(
         {
-          name                            = string
-          description                     = string
-          action                          = string
-          source_addresses                = optional(list(string))
-          source_ip_group_references      = optional(list(string))
-          destination_addresses           = optional(list(string))
-          destination_fqdns               = optional(list(string))
-          destination_ip_group_references = optional(list(string))
-          protocols                       = optional(list(string))
-          destination_ports               = optional(list(string))
+          name     = string
+          priority = number
+          action   = string
+          rules = list(object(
+            {
+              name                            = string
+              description                     = string
+              source_addresses                = optional(list(string))
+              source_ip_group_references      = optional(list(string))
+              destination_addresses           = optional(list(string))
+              destination_fqdns               = optional(list(string))
+              destination_ip_group_references = optional(list(string))
+              protocols                       = list(string)
+              destination_ports               = list(string)
+            }
+          ))
         }
       ))
     }
