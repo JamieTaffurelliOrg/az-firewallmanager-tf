@@ -26,23 +26,31 @@ No modules.
 | [azurerm_firewall_policy.base_policy](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/firewall_policy) | resource |
 | [azurerm_firewall_policy_rule_collection_group.base_policy_rule_collection_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/firewall_policy_rule_collection_group) | resource |
 | [azurerm_ip_group.ip_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/ip_group) | resource |
+| [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) | data source |
 | [azurerm_log_analytics_workspace.logs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/log_analytics_workspace) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_base_policy_name"></a> [base\_policy\_name](#input\_base\_policy\_name) | Base firewall policy to deploy | `string` | n/a | yes |
+| <a name="input_base_policy_name"></a> [base\_policy\_name](#input\_base\_policy\_name) | Base firewall policy | `string` | n/a | yes |
 | <a name="input_base_policy_rule_collection_groups"></a> [base\_policy\_rule\_collection\_groups](#input\_base\_policy\_rule\_collection\_groups) | Base rule collection groups to deploy | <pre>list(object(<br>    {<br>      name     = string<br>      priority = number<br>      application_rule_collections = list(object(<br>        {<br>          name     = string<br>          priority = number<br>          action   = string<br>          rules = list(object(<br>            {<br>              name                       = string<br>              description                = string<br>              source_addresses           = optional(list(string))<br>              source_ip_group_references = optional(list(string))<br>              destination_fqdns          = optional(list(string))<br>              destination_fqdn_tags      = optional(list(string))<br>              protocols = map(object(<br>                {<br>                  type = string<br>                  port = number<br>                }<br>              ))<br>            }<br>          ))<br>        }<br>      ))<br>      network_rule_collections = list(object(<br>        {<br>          name     = string<br>          priority = number<br>          action   = string<br>          rules = list(object(<br>            {<br>              name                            = string<br>              description                     = string<br>              source_addresses                = optional(list(string))<br>              source_ip_group_references      = optional(list(string))<br>              destination_addresses           = optional(list(string))<br>              destination_fqdns               = optional(list(string))<br>              destination_ip_group_references = optional(list(string))<br>              protocols                       = list(string)<br>              destination_ports               = list(string)<br>            }<br>          ))<br>        }<br>      ))<br>    }<br>  ))</pre> | `[]` | no |
-| <a name="input_intrusion_detection_mode"></a> [intrusion\_detection\_mode](#input\_intrusion\_detection\_mode) | Intrustion detection mode, Off, Alert or Deny | `string` | `"Deny"` | no |
+| <a name="input_base_policy_sku"></a> [base\_policy\_sku](#input\_base\_policy\_sku) | Base firewall policy sku, Basic or Standard | `string` | `"Standard"` | no |
 | <a name="input_ip_groups"></a> [ip\_groups](#input\_ip\_groups) | IP groups to deploy | <pre>list(object(<br>    {<br>      name        = string<br>      cidr_ranges = list(string)<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_location"></a> [location](#input\_location) | Location of the Virtual Network | `string` | n/a | yes |
 | <a name="input_log_analytics_workspace_name"></a> [log\_analytics\_workspace\_name](#input\_log\_analytics\_workspace\_name) | Name of Log Analytics Workspace to send diagnostics | `string` | n/a | yes |
 | <a name="input_log_analytics_workspace_resource_group_name"></a> [log\_analytics\_workspace\_resource\_group\_name](#input\_log\_analytics\_workspace\_resource\_group\_name) | Resource Group of Log Analytics Workspace to send diagnostics | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource Group name to deploy to | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply | `map(string)` | n/a | yes |
+| <a name="input_threat_intelligence_allowed_fqdns"></a> [threat\_intelligence\_allowed\_fqdns](#input\_threat\_intelligence\_allowed\_fqdns) | Threat intelligence allowed FQDNs | `list(string)` | `[]` | no |
+| <a name="input_threat_intelligence_allowed_ip_addresses"></a> [threat\_intelligence\_allowed\_ip\_addresses](#input\_threat\_intelligence\_allowed\_ip\_addresses) | Threat intelligence allowed ip\_addresses | `list(string)` | `[]` | no |
+| <a name="input_threat_intelligence_mode"></a> [threat\_intelligence\_mode](#input\_threat\_intelligence\_mode) | Threat intelligence mode, Off, Alert or Deny | `string` | `"Deny"` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_base_policy"></a> [base\_policy](#output\_base\_policy) | Base firewall policy |
+| <a name="output_base_policy_rule_collection_groups"></a> [base\_policy\_rule\_collection\_groups](#output\_base\_policy\_rule\_collection\_groups) | Base policy rule collection groups |
+| <a name="output_ip_group_id"></a> [ip\_group\_id](#output\_ip\_group\_id) | Resource IDs of the IP Groups |
 <!-- END_TF_DOCS -->
