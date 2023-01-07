@@ -21,13 +21,31 @@ variable "ip_groups" {
 
 variable "base_policy_name" {
   type        = string
-  description = "Base firewall policy to deploy"
+  description = "Base firewall policy "
 }
 
-variable "intrusion_detection_mode" {
+variable "base_policy_sku" {
+  type        = string
+  default     = "Standard"
+  description = "Base firewall policy sku, Basic or Standard"
+}
+
+variable "threat_intelligence_mode" {
   type        = string
   default     = "Deny"
-  description = "Intrustion detection mode, Off, Alert or Deny"
+  description = "Threat intelligence mode, Off, Alert or Deny"
+}
+
+variable "threat_intelligence_allowed_fqdns" {
+  type        = list(string)
+  default     = []
+  description = "Threat intelligence allowed FQDNs"
+}
+
+variable "threat_intelligence_allowed_ip_addresses" {
+  type        = list(string)
+  default     = []
+  description = "Threat intelligence allowed ip_addresses"
 }
 
 variable "base_policy_rule_collection_groups" {

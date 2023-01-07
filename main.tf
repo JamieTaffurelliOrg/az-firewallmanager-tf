@@ -8,18 +8,21 @@ resource "azurerm_ip_group" "ip_group" {
 }
 
 resource "azurerm_firewall_policy" "base_policy" {
-  name                = var.base_policy_name
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  name                     = var.base_policy_name
+  resource_group_name      = var.resource_group_name
+  location                 = var.location
+  sku                      = var.base_policy_sku
+  threat_intelligence_mode = var.threat_intelligence_mode
+
+  threat_intelligence_allowlist {
+    fqdns        = var.threat_intelligence_allowed_fqdns
+    ip_addresses = var.threat_intelligence_allowed_ip_addresses
+  }
 
   insights {
     enabled                            = true
     default_log_analytics_workspace_id = data.azurerm_log_analytics_workspace.logs.id
     retention_in_days                  = 365
-  }
-
-  intrusion_detection {
-    mode = var.intrusion_detection_mode
   }
 }
 
@@ -44,7 +47,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "base_policy_rule_colle
           name                  = rule.key
           description           = rule.value["description"]
           source_addresses      = rule.value["source_addresses"]
-          source_ip_groups      = lookup(rule.value, "source_ip_group_references", null) == null ? null : azurerm_ip_group.ip_group[(rule.value["source_ip_group_references"])].id
+          source_ip_groups      = lookup(rule.value, "source_ip_group_references", null) == null ? null : [for k in setintersection(local.deployed_ip_groups_names, rule.value["source_ip_group_references"]) : "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/ipGroups/${k}"]
           destination_fqdns     = rule.value["destination_fqdns"]
           destination_fqdn_tags = rule.value["destination_fqdn_tags"]
 
@@ -75,10 +78,10 @@ resource "azurerm_firewall_policy_rule_collection_group" "base_policy_rule_colle
         content {
           name                  = rule.key
           source_addresses      = rule.value["source_addresses"]
-          source_ip_groups      = lookup(rule.value, "source_ip_group_references", null) == null ? null : azurerm_ip_group.ip_group[(rule.value["source_ip_group_references"])].id
+          source_ip_groups      = lookup(rule.value, "source_ip_group_references", null) == null ? null : [for k in setintersection(local.deployed_ip_groups_names, rule.value["source_ip_group_references"]) : "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/ipGroups/${k}"]
           destination_addresses = lookup(rule.value, "destination_addresses", null) == null ? null : rule.value["destination_addresses"]
           destination_fqdns     = lookup(rule.value, "destination_fqdns", null) == null ? null : rule.value["destination_fqdns"]
-          destination_ip_groups = lookup(rule.value, "destination_ip_group_references", null) == null ? null : azurerm_ip_group.ip_group[(rule.value["destination_ip_group_references"])].id
+          destination_ip_groups = lookup(rule.value, "destination_ip_group_references", null) == null ? null : [for k in setintersection(local.deployed_ip_groups_names, rule.value["destination_ip_group_references"]) : "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/ipGroups/${k}"]
           protocols             = rule.value["protocols"]
           destination_ports     = rule.value["destination_ports"]
         }
