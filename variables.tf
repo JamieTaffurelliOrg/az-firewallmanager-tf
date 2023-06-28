@@ -48,6 +48,30 @@ variable "threat_intelligence_allowed_ip_addresses" {
   description = "Threat intelligence allowed ip_addresses"
 }
 
+variable "intrusion_detection" {
+  type = object({
+    enabled        = optional(bool, false)
+    mode           = optional(string, "Deny")
+    private_ranges = optional(list(string))
+    signature_overrides = optional(list(object({
+      id   = string
+      mode = optional(string, "Deny")
+    })))
+    traffic_bypass = optional(list(object({
+      name                  = string
+      protocol              = optional(string, "TCP")
+      description           = string
+      destination_addresses = optional(list(string))
+      destination_ip_groups = optional(list(string))
+      destination_ports     = optional(list(string))
+      source_addresses      = optional(list(string))
+      source_ip_groups      = optional(list(string))
+    })))
+  })
+  default     = {}
+  description = "IDPS settings"
+}
+
 variable "base_policy_rule_collection_groups" {
   type = list(object(
     {
