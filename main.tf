@@ -19,6 +19,39 @@ resource "azurerm_firewall_policy" "base_policy" {
     ip_addresses = var.threat_intelligence_allowed_ip_addresses
   }
 
+  dynamic "intrusion_detection" {
+    for_each = var.intrusion_detection.enabled == true ? [var.intrusion_detection] : []
+
+    content {
+      mode           = var.intrusion_detection.mode
+      private_ranges = var.intrusion_detection.private_ranges
+
+      dynamic "signature_overrides" {
+        for_each = { for k in var.intrusion_detection.signature_overrides : k.id => k if k != null }
+
+        content {
+          id    = signature_overrides.key
+          state = signature_overrides.value["state"]
+        }
+      }
+
+      dynamic "traffic_bypass" {
+        for_each = { for k in var.intrusion_detection.traffic_bypass : k.name => k if k != null }
+
+        content {
+          name                  = traffic_bypass.key
+          protocol              = traffic_bypass.value["protocol"]
+          description           = traffic_bypass.value["description"]
+          destination_addresses = traffic_bypass.value["destination_addresses"]
+          destination_ip_groups = traffic_bypass.value["destination_ip_groups"]
+          destination_ports     = traffic_bypass.value["destination_ports"]
+          source_addresses      = traffic_bypass.value["source_addresses"]
+          source_ip_groups      = traffic_bypass.value["source_ip_groups"]
+        }
+      }
+    }
+  }
+
   insights {
     enabled                            = true
     default_log_analytics_workspace_id = data.azurerm_log_analytics_workspace.logs.id
