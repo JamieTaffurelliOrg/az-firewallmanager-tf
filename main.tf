@@ -57,6 +57,15 @@ resource "azurerm_firewall_policy" "base_policy" {
     default_log_analytics_workspace_id = data.azurerm_log_analytics_workspace.logs.id
     retention_in_days                  = 365
   }
+
+  dynamic "dns" {
+    for_each = var.dns == null ? [] : [var.dns]
+
+    content {
+      proxy_enabled = var.dns.proxy_enabled
+      servers       = var.dns.servers
+    }
+  }
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "base_policy_rule_collection_group" {

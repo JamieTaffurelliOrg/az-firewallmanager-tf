@@ -72,6 +72,15 @@ variable "intrusion_detection" {
   description = "IDPS settings"
 }
 
+variable "dns" {
+  type = object({
+    proxy_enabled = bool
+    servers       = optional(list(string))
+  })
+  default     = null
+  description = "Firewall DNS settings"
+}
+
 variable "base_policy_rule_collection_groups" {
   type = list(object(
     {
