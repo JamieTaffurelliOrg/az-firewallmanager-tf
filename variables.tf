@@ -135,6 +135,22 @@ variable "base_policy_rule_collection_groups" {
   description = "Base rule collection groups to deploy"
 }
 
+variable "child_policies" {
+  type = list(object(
+    {
+      name                                     = string
+      threat_intelligence_mode                 = optional(string, "Deny")
+      threat_intelligence_allowed_fqdns        = optional(list(string), [])
+      threat_intelligence_allowed_ip_addresses = optional(list(string), [])
+      dns = optional(object({
+        proxy_enabled = bool
+        servers       = optional(list(string))
+      }))
+  }))
+  default     = []
+  description = "Child policies to deploy"
+}
+
 variable "log_analytics_workspace_name" {
   type        = string
   description = "Name of Log Analytics Workspace to send diagnostics"

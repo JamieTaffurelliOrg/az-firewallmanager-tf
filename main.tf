@@ -131,3 +131,34 @@ resource "azurerm_firewall_policy_rule_collection_group" "base_policy_rule_colle
     }
   }
 }
+
+resource "azurerm_firewall_policy" "child_policy" {
+  #checkov:skip=CKV_AZURE_220:IDPS inherited from parent
+  for_each                 = { for k in var.child_policies : k.name => k if k != null }
+  name                     = each.key
+  resource_group_name      = var.resource_group_name
+  location                 = var.location
+  base_policy_id           = azurerm_firewall_policy.base_policy.id
+  sku                      = var.base_policy_sku
+  threat_intelligence_mode = each.value["threat_intelligence_mode"]
+
+  threat_intelligence_allowlist {
+    fqdns        = each.value["threat_intelligence_allowed_fqdns"]
+    ip_addresses = each.value["threat_intelligence_allowed_ip_addresses"]
+  }
+
+  insights {
+    enabled                            = true
+    default_log_analytics_workspace_id = data.azurerm_log_analytics_workspace.logs.id
+    retention_in_days                  = 365
+  }
+
+  dynamic "dns" {
+    for_each = each.value["dns"] == null ? [] : [each.value["dns"]]
+
+    content {
+      proxy_enabled = dns.proxy_enabled
+      servers       = dns.servers
+    }
+  }
+}
