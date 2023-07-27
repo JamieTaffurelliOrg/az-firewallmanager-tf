@@ -159,8 +159,8 @@ resource "azurerm_firewall_policy" "child_policy" {
     for_each = each.value["dns"] == null ? [] : [each.value["dns"]]
 
     content {
-      proxy_enabled = dns.proxy_enabled
-      servers       = dns.servers
+      proxy_enabled = dns.value["proxy_enabled"]
+      servers       = dns.value["servers"]
     }
   }
 
