@@ -66,6 +66,8 @@ resource "azurerm_firewall_policy" "base_policy" {
       servers       = var.dns.servers
     }
   }
+
+  tags = var.tags
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "base_policy_rule_collection_group" {
@@ -161,4 +163,6 @@ resource "azurerm_firewall_policy" "child_policy" {
       servers       = dns.servers
     }
   }
+
+  tags = var.tags
 }
